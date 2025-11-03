@@ -1,0 +1,75 @@
+apiVersion: camel.apache.org/v1
+kind: Kamelet
+metadata:
+  name: example-sink
+  annotations:
+    camel.apache.org/provider: "Apache Software Foundation"
+    camel.apache.org/kamelet.support.level: "Stable"
+    camel.apache.org/catalog.version: "4.14.2"
+    camel.apache.org/kamelet.group: "Example"
+    camel.apache.org/kamelet.namespace: "Example"
+  labels:
+    camel.apache.org/kamelet.type: "sink"
+    camel.apache.org/kamelet.verified: "true"
+    camel.apache.org/kamelet.bundled: "true"
+spec:
+  definition:
+    title: "Example Kamelet Sink"
+    description: |-
+      Example Kamelet Sink
+    type: object
+    properties:
+      mapperInstance:
+        title: Mapper Instance
+        description: Mapper Instance to use
+        type: string
+        default: ''
+      methodName:
+        title: Mapper Method
+        description: Method Name of mapper to invoke
+        type: string
+      inputPropertiesList:
+        title: Input Properties List as source
+        description: Input Properties List as source
+        type: string
+      exchangeArg:
+        title: Exchange Argument
+        description: Exchange Argument is present, ignored if inputPropertiesList is blank
+        type: boolean
+        default: false
+  dependencies:
+    - "camel:kamelet"
+    - "camel:core"
+    - "camel:log"
+  template:
+    from:
+      uri: "kamelet:source"
+      steps:
+        - log:
+            message: "From kamelet targetObject -> {{targetObject}}"
+        - log:
+            message: "From kamelet mapperInstance -> {{mapperInstance}}"
+        - log:
+            message: "From kamelet methodName -> {{methodName}}"
+        - log:
+            message: "From kamelet inputPropertiesList -> {{inputPropertiesList}}"
+        - log:
+            message: "From kamelet exchangeArg -> {{exchangeArg}}"
+        - setProperty:
+            name: "ExampleSink_targetObject"
+            simple: "{{targetObject}}"
+        - setProperty:
+            name: "ExampleSink_mapperInstance"
+            simple: "{{?mapperInstance}}"
+        - setProperty:
+            name: "ExampleSink_methodName"
+            simple: "{{?methodName}}"
+        - setProperty:
+            name: "ExampleSink_inputPropertiesList"
+            simple: "{{?inputPropertiesList}}"
+        - setProperty:
+            name: "ExampleSink_exchangeArg"
+            simple: "{{exchangeArg}}"
+        - process:
+            ref: >-
+              #class:com.example.processor.TestProcessor

@@ -1,0 +1,16 @@
+camel:
+  main:
+    tracing: false
+    name: test
+    message-history: false
+    startup-summary-level: Verbose
+    dump-routes: false
+    routes-reload-enabled: false
+    routes-reload-directory: src/main/resources/camel-routes
+    routes-reload-directory-recursive: true
+    routes-reload-pattern: "*"
+    routes-reload-remove-all-routes: false
+    routes-include-pattern: classpath:camel-routes/*.yaml
+    use-mdc-logging: true
+  springboot:
+    main-run-controller: true
